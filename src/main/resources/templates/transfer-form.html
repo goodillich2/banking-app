@@ -36,7 +36,7 @@
       font-size: 16px;
     }
 
-    input[type="text"], input[type="number"] {
+    input[type="text"], input[type="number"], select {
       width: 100%;
       padding: 10px;
       border: 1px solid #ccc;
@@ -70,7 +70,14 @@
   <form th:action="@{/accounts/transfer}" th:object="${transfer}" method="post">
     <div class="form-group">
       <label for="fromAccountId">From Account ID</label>
-      <input type="text" id="fromAccountId" th:value="${transfer.fromAccountId}" th:field="*{fromAccountId}" readonly>
+      <div th:if="${transfer.fromAccountId != null}">
+        <input type="text" id="fromAccountId" th:value="${transfer.fromAccountId}" th:field="*{fromAccountId}" readonly>
+      </div>
+      <div th:unless="${transfer.fromAccountId != null}">
+        <select id="fromAccountId" th:field="*{fromAccountId}" required>
+          <option th:each="account : ${accounts}" th:value="${account.accountId}" th:text="${account.accountId}"></option>
+        </select>
+      </div>
     </div>
     <div class="form-group">
       <label for="toAccountId">To Account ID</label>

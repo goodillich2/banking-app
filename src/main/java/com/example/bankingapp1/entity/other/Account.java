@@ -35,6 +35,10 @@ public class Account {
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private AccountStatus status = AccountStatus.ACTIVE;
+
     @OneToMany(mappedBy = "fromAccount", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Transaction> outgoingTransactions;
 

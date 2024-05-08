@@ -2,6 +2,7 @@ package com.example.bankingapp1.service;
 
 
 import com.example.bankingapp1.entity.other.Account;
+import com.example.bankingapp1.entity.other.AccountStatus;
 import com.example.bankingapp1.entity.other.Transaction;
 import com.example.bankingapp1.entity.user.User;
 import com.example.bankingapp1.repository.AccountRepository;
@@ -28,7 +29,7 @@ public class AccountService {
     private TransactionRepository transactionRepository;
 
     public List<Account> findAllAccountsByEmail(String email) {
-        return accountRepository.findAllByUserEmail(email);
+        return accountRepository.findAllByUserEmailAndStatus(email, AccountStatus.ACTIVE);
     }
 
     @Transactional
@@ -37,14 +38,23 @@ public class AccountService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
         account.setUser(user);
+        account.setStatus(AccountStatus.ACTIVE);
         accountRepository.save(account);
     }
 
+//    @Transactional
+//    public void deleteAccount(Long accountId) {
+//        Account account = accountRepository.findById(accountId)
+//                .orElseThrow(() -> new RuntimeException("Account not found"));
+//        accountRepository.delete(account);
+//    }
+
     @Transactional
-    public void deleteAccount(Long accountId) {
+    public void closeAccount(Long accountId) {
         Account account = accountRepository.findById(accountId)
-                .orElseThrow(() -> new RuntimeException("Account not found"));
-        accountRepository.delete(account);
+                .orElseThrow(() -> new IllegalArgumentException("Account not found"));
+        account.setStatus(AccountStatus.CLOSED);
+        accountRepository.save(account);
     }
 
     @Transactional

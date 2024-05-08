@@ -52,20 +52,29 @@ public class AccountController {
 
     @PostMapping("/delete/{accountId}")
     public String deleteAccount(@PathVariable Long accountId, RedirectAttributes redirectAttributes) {
-        accountService.deleteAccount(accountId);
+        accountService.closeAccount(accountId);
         redirectAttributes.addFlashAttribute("successMessage", "Account successfully closed!");
         return "redirect:/accounts";
     }
 
+
+
     @GetMapping("/transfer")
     public String showTransferForm(@RequestParam(required = false) Long fromAccountId, Model model) {
         TransferDTO transfer = new TransferDTO();
+        final String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        List<Account> accounts = accountService.findAllAccountsByEmail(userEmail);
+
         if (fromAccountId != null) {
-            transfer.setFromAccountId(fromAccountId);  // Устанавливаем исходный счет, если он передан
+            transfer.setFromAccountId(fromAccountId);  // Set the sender account if provided
         }
+
         model.addAttribute("transfer", transfer);
+        model.addAttribute("accounts", accounts);
         return "transfer-form";
     }
+
+
 
     @PostMapping("/transfer")
     public String performTransfer(@ModelAttribute TransferDTO transfer, RedirectAttributes redirectAttributes) {
@@ -82,27 +91,6 @@ public class AccountController {
     }
 
 
-//    @GetMapping("/transfer")
-//    public String showFindAccountForm(@RequestParam(required = false) Long fromAccountId, Model model) {
-//        model.addAttribute("transfer", new TransferDTO());
-//
-//        return "find-account-form";
-//    }
-//
-//    @PostMapping("/find-account")
-//    public String findAccount(@RequestParam String accountId, Model model, RedirectAttributes redirectAttributes) {
-//        try {
-//            Account recipientAccount = accountService.findAccountById(Long.parseLong(accountId));
-//            model.addAttribute("recipientAccount", recipientAccount);
-//            TransferDTO transfer = new TransferDTO();
-//            transfer.setToAccountId(recipientAccount.getAccountId());
-//            model.addAttribute("transfer", transfer);
-//            return "confirm-transfer";
-//        } catch (Exception e) {
-//            redirectAttributes.addFlashAttribute("errorMessage", "Account not found.");
-//            return "redirect:/accounts/transfer";
-//        }
-//    }
 
 
 }
