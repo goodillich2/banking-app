@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Accounts</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f4f8;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            font-size: 16px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #003366;
+        }
+
+        .account-card {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px auto;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            width: calc(50% - 40px);
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .account-details {
+            margin: 10px 0;
+            font-size: 18px;
+            color: #555;
+        }
+
+        .button {
+            padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            color: white;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .button-add {
+            background-color: #4CAF50;
+        }
+
+        .button-delete {
+            background-color: #f44336;
+        }
+
+        .button-transfer {
+            background-color: #008CBA;
+        }
+
+        a.button:link, a.button:visited {
+            color: white;
+        }
+
+        a.button:hover {
+            opacity: 0.9;
+        }
+
+        /* Responsive layout */
+        @media (max-width: 768px) {
+            .account-card {
+                width: calc(100% - 40px);
+            }
+        }
+    </style>
+</head>
+<body>
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<h1>Your Accounts</h1>
+<div style="text-align: center; margin-bottom: 20px;">
+    <a href="/accounts/add" class="button button-add">Create New Account</a>
+</div>
+<div style="display: flex; flex-wrap: wrap; justify-content: center;">
+    <div th:each="account : ${accounts}" class="account-card">
+        <div class="account-details">Account ID: <span th:text="${account.accountId}"></span></div>
+        <div class="account-details">Type: <span th:text="${account.accountType}"></span></div>
+        <div class="account-details">Balance: <span th:text="${account.balance}"></span></div>
+        <form th:action="@{/accounts/delete/{accountId}(accountId=${account.accountId})}" method="post">
+            <button type="submit" class="button button-delete">Close Account</button>
+        </form>
+        <a th:href="@{/accounts/transfer(fromAccountId=${account.accountId})}" class="button button-transfer">Transfer Funds</a>
+        <a th:href="@{/transactions/{accountId}(accountId=${account.accountId})}" class="button button-transfer">View Transactions</a>
+    </div>
+</div>
+
+<div th:if="${successMessage}" style="text-align: center; color: green;">
+    <p th:text="${successMessage}"></p>
+</div>
+
+<div th:if="${errorMessage}" style="text-align: center; color: red;">
+    <p th:text="${errorMessage}"></p>
+</div>
+
+</body>
+</html>

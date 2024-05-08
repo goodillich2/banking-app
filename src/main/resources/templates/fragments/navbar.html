@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Navbar Fragment</title>
+</head>
+<body style="margin: 0; padding-top: 50px;"> <!-- Add padding to the top of the body to avoid overlap with the fixed navbar -->
+<div th:fragment="navbar">
+  <nav style="background-color: #003366; color: white; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; position: fixed; top: 0; left: 0; right: 0; z-index: 1000;">
+    <div style="flex-grow: 1;">
+      <a href="/accounts" style="color: white; text-decoration: none; padding-right: 20px;">Home</a>
+      <a href="#" style="color: white; text-decoration: none; padding-right: 20px;">About Us</a>
+      <a href="/profile" style="color: white; text-decoration: none; padding-right: 20px;">Profile</a>
+    </div>
+    <div>
+      <div th:if="${#authorization.expression('isAuthenticated()')}" style="display: inline;">
+        <a href="/auth/logout" style="color: white; text-decoration: none;">Logout</a>
+      </div>
+      <div th:unless="${#authorization.expression('isAuthenticated()')}" style="display: inline;">
+        <a href="/auth/login" style="color: white; text-decoration: none;">Login</a>
+      </div>
+    </div>
+  </nav>
+  <br>
+  <br>
+</div>
+
+</body>
+</html>

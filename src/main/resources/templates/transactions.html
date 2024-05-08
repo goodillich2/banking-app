@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Transaction History</title>
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f4f4f8;
+      color: #333;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #003366;
+    }
+
+    table {
+      width: 100%;
+      margin: 20px auto;
+      border-collapse: collapse;
+      background-color: white;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    th, td {
+      padding: 10px;
+      border: 1px solid #ccc;
+      text-align: left;
+    }
+
+    th {
+      background-color: #003366;
+      color: white;
+    }
+
+    tbody tr:nth-child(odd) {
+      background-color: #f9f9f9;
+    }
+
+    a {
+      display: block;
+      width: 200px;
+      margin: 20px auto;
+      text-align: center;
+      padding: 10px;
+      background-color: #4CAF50;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+
+    a:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+<!--<div th:replace="fragments/navbar :: navbar"></div>-->
+<h1>Transaction History</h1>
+<table>
+  <thead>
+  <tr>
+    <th>Date</th>
+    <th>From Account ID</th>
+    <th>To Account ID</th>
+    <th>Amount</th>
+    <th>Description</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="transaction : ${transactions}">
+    <td th:text="${#dates.format(transaction.transactionDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+    <td th:text="${transaction.fromAccount.accountId}"></td>
+    <td th:text="${transaction.toAccount.accountId}"></td>
+    <td th:text="${transaction.amount}"></td>
+    <td th:text="${transaction.description}"></td>
+  </tr>
+  </tbody>
+</table>
+<a href="/accounts">Back to Accounts</a>
+</body>
+</html>
