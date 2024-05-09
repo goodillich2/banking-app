@@ -28,6 +28,19 @@ public class Account {
     @Column(nullable = false)
     private BigDecimal balance;
 
+
+    @Column(nullable = false, length = 16, unique = true)
+    private String cardNumber;
+
+    @Column(nullable = false)
+    private int expiryMonth;
+
+    @Column(nullable = false)
+    private int expiryYear;
+
+    @Column(nullable = false, length = 3)
+    private String cvv;
+
     @Column(nullable = false)
     private String accountType;
 

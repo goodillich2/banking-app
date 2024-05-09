@@ -8,6 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
-   @Query("SELECT t FROM Transaction t WHERE t.fromAccount = :account OR t.toAccount = :account")
-   List<Transaction> findByAccount(Account account);
+   @Query("SELECT t FROM Transaction t WHERE t.fromAccount.accountId = :accountId OR t.toAccount.accountId = :accountId ORDER BY t.transactionDate DESC")
+   List<Transaction> findByAccountIdSortedByDateDesc(Long accountId);
 }

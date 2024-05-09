@@ -5,25 +5,24 @@ import java.math.BigDecimal;
 
 public class TransferDTO {
 
-    private Long fromAccountId;
-    private Long toAccountId;
+    private String fromCardNumber;
+    private String toCardNumber;
     private BigDecimal amount;
 
-    // Getters and Setters
-    public Long getFromAccountId() {
-        return fromAccountId;
+    public String getFromCardNumber() {
+        return fromCardNumber;
     }
 
-    public void setFromAccountId(Long fromAccountId) {
-        this.fromAccountId = fromAccountId;
+    public void setFromCardNumber(String fromCardNumber) {
+        this.fromCardNumber = fromCardNumber;
     }
 
-    public Long getToAccountId() {
-        return toAccountId;
+    public String getToCardNumber() {
+        return toCardNumber;
     }
 
-    public void setToAccountId(Long toAccountId) {
-        this.toAccountId = toAccountId;
+    public void setToCardNumber(String toCardNumber) {
+        this.toCardNumber = toCardNumber;
     }
 
     public BigDecimal getAmount() {

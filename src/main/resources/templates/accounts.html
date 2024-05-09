@@ -17,85 +17,147 @@
             color: #003366;
         }
 
-        .account-card {
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            padding: 20px;
-            margin: 20px auto;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            width: calc(50% - 40px);
-            background-color: white;
+        .account-cards-container {
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
         }
 
-        .account-details {
-            margin: 10px 0;
+        .account-card {
+            background: linear-gradient(135deg, #ff8a00, #e52e71);
+            color: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px;
+            width: 350px;
+            height: 220px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .account-logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .account-number {
+            font-family: 'Courier New', Courier, monospace;
             font-size: 18px;
-            color: #555;
+            letter-spacing: 2px;
+        }
+
+        .account-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+        }
+
+        .account-balance {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .account-actions {
+            position: absolute;
+            bottom: 10px;
+            left: 20px;
+            display: flex;
+            gap: 10px;
+            width: 310px;
         }
 
         .button {
-            padding: 10px 20px;
-            margin: 10px;
-            cursor: pointer;
+            padding: 8px 16px;
             border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            color: white;
-            text-decoration: none;
-            display: inline-block;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
             text-align: center;
-        }
-
-        .button-add {
-            background-color: #4CAF50;
+            text-decoration: none;
+            color: white;
+            flex: 1;
         }
 
         .button-delete {
-            background-color: #f44336;
+            background: #f44336;
         }
 
         .button-transfer {
-            background-color: #008CBA;
+            background: #008CBA;
+        }
+
+        .button-view {
+            background: #ffa500;
         }
 
         a.button:link, a.button:visited {
             color: white;
         }
 
-        a.button:hover {
+        a.button:hover, .button:hover {
             opacity: 0.9;
         }
 
-        /* Responsive layout */
-        @media (max-width: 768px) {
-            .account-card {
-                width: calc(100% - 40px);
-            }
+        .button-add-transfer {
+            text-align: center;
+            margin: 20px auto;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
         }
+
+        .button-add {
+            background: #4CAF50;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: white;
+            cursor: pointer;
+        }
+
+        .button-general-transfer {
+            background: #008CBA;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: white;
+            cursor: pointer;
+        }
+
     </style>
 </head>
 <body>
 <div th:replace="fragments/navbar :: navbar"></div>
 
 <h1>Your Accounts</h1>
-<div style="text-align: center; margin-bottom: 20px;">
-    <a href="/accounts/add" class="button button-add">Create New Account</a>
-    <!-- General Transfer Funds Button -->
-    <a href="/accounts/transfer" class="button button-transfer">General Transfer Funds</a>
+<div class="button-add-transfer">
+    <a href="/accounts/add" class="button-add">Create New Account</a>
+    <a href="/accounts/transfer" class="button-general-transfer">General Transfer Funds</a>
 </div>
-<div style="display: flex; flex-wrap: wrap; justify-content: center;">
+
+<div class="account-cards-container">
     <div th:each="account : ${accounts}" class="account-card">
-        <div class="account-details">Account ID: <span th:text="${account.accountId}"></span></div>
-        <div class="account-details">Type: <span th:text="${account.accountType}"></span></div>
-        <div class="account-details">Balance: <span th:text="${account.balance}"></span></div>
-        <form th:action="@{/accounts/delete/{accountId}(accountId=${account.accountId})}" method="post">
-            <button type="submit" class="button button-delete">Close Account</button>
-        </form>
-        <a th:href="@{/accounts/transfer(fromAccountId=${account.accountId})}" class="button button-transfer">Transfer Funds</a>
-        <a th:href="@{/transactions/{accountId}(accountId=${account.accountId})}" class="button button-transfer">View Transactions</a>
+        <div class="account-logo">Your Bank</div>
+        <div class="account-number" th:text="${account.cardNumber}"></div>
+        <div class="account-info">
+            <span th:text="'Type: ' + ${account.accountType}"></span>
+            <span th:text="'Expires: ' + ${account.expiryMonth} + '/' + ${account.expiryYear}"></span>
+        </div>
+        <div class="account-balance">Balance: <span th:text="${account.balance}"></span></div>
+        <div class="account-info">
+            <span th:text="'CVV: ' + ${account.cvv}"></span>
+        </div>
+        <div class="account-actions">
+            <form th:action="@{/accounts/delete/{accountId}(accountId=${account.accountId})}" method="post">
+                <button type="submit" class="button button-delete">Close Account</button>
+            </form>
+            <a th:href="@{/accounts/transfer(fromCardNumber=${account.cardNumber})}" class="button button-transfer">Transfer Funds</a>
+            <a th:href="@{/transactions/{accountId}(accountId=${account.accountId})}" class="button button-view">View Transactions</a>
+        </div>
     </div>
 </div>
 

@@ -58,15 +58,14 @@ public class AccountController {
     }
 
 
-
     @GetMapping("/transfer")
-    public String showTransferForm(@RequestParam(required = false) Long fromAccountId, Model model) {
+    public String showTransferForm(@RequestParam(required = false) String fromCardNumber, Model model) {
         TransferDTO transfer = new TransferDTO();
         final String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         List<Account> accounts = accountService.findAllAccountsByEmail(userEmail);
 
-        if (fromAccountId != null) {
-            transfer.setFromAccountId(fromAccountId);  // Set the sender account if provided
+        if (fromCardNumber != null) {
+            transfer.setFromCardNumber(fromCardNumber);
         }
 
         model.addAttribute("transfer", transfer);
@@ -74,21 +73,17 @@ public class AccountController {
         return "transfer-form";
     }
 
-
-
     @PostMapping("/transfer")
     public String performTransfer(@ModelAttribute TransferDTO transfer, RedirectAttributes redirectAttributes) {
         try {
-            System.out.println(transfer.getFromAccountId());
-            System.out.println( transfer.getToAccountId());
-
-            accountService.transferMoney(transfer.getFromAccountId(), transfer.getToAccountId(), transfer.getAmount());
+            accountService.transferMoney(transfer.getFromCardNumber(), transfer.getToCardNumber(), transfer.getAmount());
             redirectAttributes.addFlashAttribute("successMessage", "Transfer successful!");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Error during transfer: " + e.getMessage());
         }
         return "redirect:/accounts";
     }
+
 
 
 

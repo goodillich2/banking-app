@@ -69,19 +69,19 @@
 <div class="form-container">
   <form th:action="@{/accounts/transfer}" th:object="${transfer}" method="post">
     <div class="form-group">
-      <label for="fromAccountId">From Account ID</label>
-      <div th:if="${transfer.fromAccountId != null}">
-        <input type="text" id="fromAccountId" th:value="${transfer.fromAccountId}" th:field="*{fromAccountId}" readonly>
+      <label for="fromCardNumber">From Card Number</label>
+      <div th:if="${transfer.fromCardNumber != null}">
+        <input type="text" id="fromCardNumber" th:value="${transfer.fromCardNumber}" th:field="*{fromCardNumber}" readonly>
       </div>
-      <div th:unless="${transfer.fromAccountId != null}">
-        <select id="fromAccountId" th:field="*{fromAccountId}" required>
-          <option th:each="account : ${accounts}" th:value="${account.accountId}" th:text="${account.accountId}"></option>
+      <div th:unless="${transfer.fromCardNumber != null}">
+        <select id="fromCardNumber" th:field="*{fromCardNumber}" required>
+          <option th:each="account : ${accounts}" th:value="${account.cardNumber}" th:text="${account.cardNumber}"></option>
         </select>
       </div>
     </div>
     <div class="form-group">
-      <label for="toAccountId">To Account ID</label>
-      <input type="text" id="toAccountId" th:field="*{toAccountId}" required>
+      <label for="toCardNumber">To Card Number</label>
+      <input type="text" id="toCardNumber" th:field="*{toCardNumber}" required>
     </div>
     <div class="form-group">
       <label for="amount">Amount</label>

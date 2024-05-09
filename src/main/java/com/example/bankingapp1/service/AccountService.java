@@ -1,6 +1,7 @@
 package com.example.bankingapp1.service;
 
 
+import com.example.bankingapp1.CardNumberGenerator.CardNumberGenerator;
 import com.example.bankingapp1.entity.other.Account;
 import com.example.bankingapp1.entity.other.AccountStatus;
 import com.example.bankingapp1.entity.other.Transaction;
@@ -38,16 +39,14 @@ public class AccountService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
         account.setUser(user);
+        account.setCardNumber(CardNumberGenerator.generateCardNumber());
+        account.setCvv(CardNumberGenerator.generateCVV());
+        account.setExpiryMonth(12); // Пример: использовать логику для генерации сроков действия
+        account.setExpiryYear(2026); // Пример
         account.setStatus(AccountStatus.ACTIVE);
         accountRepository.save(account);
     }
 
-//    @Transactional
-//    public void deleteAccount(Long accountId) {
-//        Account account = accountRepository.findById(accountId)
-//                .orElseThrow(() -> new RuntimeException("Account not found"));
-//        accountRepository.delete(account);
-//    }
 
     @Transactional
     public void closeAccount(Long accountId) {
@@ -58,10 +57,10 @@ public class AccountService {
     }
 
     @Transactional
-    public void transferMoney(Long fromAccountId, Long toAccountId, BigDecimal amount) {
-        Account fromAccount = accountRepository.findById(fromAccountId)
+    public void transferMoney(String fromCardNumber, String toCardNumber, BigDecimal amount) {
+        Account fromAccount = accountRepository.findByCardNumber(fromCardNumber)
                 .orElseThrow(() -> new RuntimeException("Source account not found"));
-        Account toAccount = accountRepository.findById(toAccountId)
+        Account toAccount = accountRepository.findByCardNumber(toCardNumber)
                 .orElseThrow(() -> new RuntimeException("Destination account not found"));
 
         if (fromAccount.getBalance().compareTo(amount) < 0) {
@@ -76,16 +75,23 @@ public class AccountService {
         transaction.setToAccount(toAccount);
         transaction.setAmount(amount);
         transaction.setTransactionDate(new Date());
-        transaction.setDescription("Transfer from account " + fromAccountId + " to " + toAccountId);
+        transaction.setDescription("Transfer from account " + fromCardNumber + " to " + toCardNumber);
 
         transactionRepository.save(transaction);
         accountRepository.save(fromAccount);
         accountRepository.save(toAccount);
     }
 
-    public Account findAccountById(long parseLong)
-    {
-        return accountRepository.findById(parseLong).get();
+    public Account findAccountById(long parseLong) {
+        return accountRepository.findById(parseLong)
+                .orElseThrow(() -> new IllegalArgumentException("Account not found"));
     }
+
+    public Account findByCardNumber(String cardNumber) {
+        return accountRepository.findByCardNumber(cardNumber)
+                .orElseThrow(() -> new IllegalArgumentException("Account not found"));
+    }
+
+
 }
 

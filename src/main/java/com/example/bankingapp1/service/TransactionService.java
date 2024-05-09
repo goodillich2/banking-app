@@ -17,13 +17,7 @@ public class TransactionService {
     @Autowired
     private TransactionRepository transactionRepository;
 
-    @Autowired
-    private AccountRepository accountRepository;
-
-    public List<Transaction> findTransactionsByAccountId(Long accountId)
-    {
-        Account account = accountRepository.findById(accountId)
-                .orElseThrow(() -> new RuntimeException("Account not found with id: " + accountId));
-        return transactionRepository.findByAccount(account);
+    public List<Transaction> findTransactionsByAccountId(Long accountId) {
+        return transactionRepository.findByAccountIdSortedByDateDesc(accountId);
     }
 }
